@@ -141,7 +141,8 @@
       position: fixed;
       bottom: calc(14px + var(--safe-bottom));
       left: 50%; transform: translateX(-50%);
-      width: 68%;
+      /* Mobile: 4 tabs — a bit wider */
+      width: 75%;
       min-width: 300px;
       max-width: 460px;
       background: rgba(0,20,38,0.85);
@@ -149,8 +150,7 @@
       border: 1px solid rgba(255,255,255,0.12);
       border-radius: 999px;
       display: flex; align-items: center;
-      padding: 7px 10px;
-      gap: 4px;
+      padding: 6px;
       z-index: 50;
     }
     @media (min-width: 768px) {
@@ -159,35 +159,30 @@
         min-width: 420px;
         max-width: 640px;
         bottom: 20px;
-        padding: 8px 12px;
-        gap: 6px;
+        padding: 8px;
       }
     }
 
     .tab-pill {
       position: absolute;
-      /* Oval: shorter than full height so it reads as a floating capsule */
-      height: 56%;
-      min-height: 40px;
-      background: rgba(255,255,255,0.14);
+      height: calc(100% - 12px);
+      background: rgba(255,255,255,0.13);
       border-radius: 999px;
       transition: left 0.55s cubic-bezier(0.34,1.3,0.64,1), width 0.55s cubic-bezier(0.34,1.3,0.64,1);
       pointer-events: none;
-      /* Subtle inner glow so it pops */
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), 0 0 0 1px rgba(255,255,255,0.07);
     }
     @media (min-width: 768px) {
-      .tab-pill { height: 58%; min-height: 46px; }
+      .tab-pill { height: calc(100% - 16px); }
     }
 
     .tab-item {
       flex: 1; display: flex; flex-direction: column;
       align-items: center; justify-content: center;
-      padding: var(--tab-pad-v) 6px;
+      padding: var(--tab-pad-v) 0;
       cursor: pointer; border-radius: 999px;
       transition: transform 0.2s cubic-bezier(0.34,1.3,0.64,1);
       position: relative; z-index: 1; gap: 3px;
-      min-height: calc(var(--tab-h) - 14px);
+      min-height: calc(var(--tab-h) - 12px);
     }
     .tab-item:hover  { transform: scale(1.07); }
     .tab-item:active { transform: scale(0.93); }
@@ -430,20 +425,6 @@
     }
     applyTabLayout()
     window.addEventListener('resize', () => { applyTabLayout(); if (window.moveTabPill) window.moveTabPill() })
-
-    // Pill positioning — called from app.js after navigation
-    // Extra px makes pill wider than the item on each side
-    window.moveTabPill = function() {
-      const pill   = document.getElementById('tab-pill')
-      const active = document.querySelector('.tab-item.active')
-      if (!pill || !active) return
-      const bar    = document.getElementById('tab-bar')
-      const barRect    = bar.getBoundingClientRect()
-      const activeRect = active.getBoundingClientRect()
-      const extra  = window.innerWidth >= 768 ? 10 : 8  // px wider on each side
-      pill.style.left  = (activeRect.left - barRect.left - extra) + 'px'
-      pill.style.width = (activeRect.width + extra * 2) + 'px'
-    }
   </script>
 
   <script type="module" src="/src/main.js"></script>
